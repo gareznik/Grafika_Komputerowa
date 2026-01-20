@@ -1,4 +1,4 @@
-#!C:/Users/koles/AppData/Local/Programs/Python/Python314/python.exe
+#!C:/Users/lenovo/AppData/Local/Microsoft/WindowsApps/python.exe
 import sys
 import time
 
@@ -39,7 +39,7 @@ def prostokat(x,y,a,b):
     glEnd()
 
     glBegin(GL_TRIANGLES)
-    # glColor3f(0.0, 1.0, 0.0)    #zeby nie bylo zmiany koloru w prostokacie serpinskiego
+    #glColor3f(0.0, 1.0, 0.0)    #zeby nie bylo zmiany koloru w prostokacie serpinskiego
     glVertex2f(x - half_a, y - half_b)
     glVertex2f(x + half_a, y + half_b)
     glVertex2f(x - half_a, y + half_b)
@@ -88,24 +88,22 @@ def draw_sierpinski_carpet(x, y, a, b, level):
         new_b = b / 3.0
         for i in range(-1, 2):  # i = -1 (lewo), 0 (środek), 1 (prawo)
             for j in range(-1, 2):  # j = -1 (dół), 0 (środek), 1 (góra)
-                # Pomijamy rysowanie środkowego prostokąta (i=0, j=0)
                 if not (i == 0 and j == 0):
                     # Obliczamy nowe współrzędne środka dla 8 mniejszych prostokątów
                     new_x = x + (i * new_a)
                     new_y = y + (j * new_b)
-                    # Wywołujemy funkcję rekurencyjnie dla 8 mniejszych prostokątów,
-                    # zmniejszając poziom (level) o 1.
                     draw_sierpinski_carpet(new_x, new_y, new_a, new_b, level - 1)
+
 
 def draw_sierpinski_trojkat(x1, y1, x2, y2, x3, y3, level):
     if level == 0:
         trojkat(x1, y1, x2, y2, x3, y3)
     else:
-        # Obliczanie środków boków trójkąta
+        # srodki bokow
         m1 = ((x1 + x2) / 2, (y1 + y2) / 2)
         m2 = ((x2 + x3) / 2, (y2 + y3) / 2)
         m3 = ((x1 + x3) / 2, (y1 + y3) / 2)
-        # Wywołanie rekurencyjne dla trzech mniejszych trójkątów
+        # rekurecja jak w carpecie
         draw_sierpinski_trojkat(x1, y1, m1[0], m1[1], m3[0], m3[1], level - 1)
         draw_sierpinski_trojkat(x2, y2, m1[0], m1[1], m2[0], m2[1], level - 1)
         draw_sierpinski_trojkat(x3, y3, m2[0], m2[1], m3[0], m3[1], level - 1)
@@ -131,7 +129,7 @@ def render(time):
     # prostokat_random(0, 0, 100, 100, 100)
 
     # zad4
-    # draw_sierpinski_carpet(0, 0, 200, 200, 3)
+    #draw_sierpinski_carpet(0, 0, 200, 200, 6)
 
     # zad5
     draw_sierpinski_trojkat(-75, -65, 75, -65, 0, 75, 5)

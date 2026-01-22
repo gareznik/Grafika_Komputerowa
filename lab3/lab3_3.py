@@ -8,10 +8,8 @@ from glfw.GLFW import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-# Rozmiar siatki (N x N)
 N = 30
 
-# Tablice do przechowywania współrzędnych i kolorów
 vertices = [[[0.0] * 3 for i in range(N)] for j in range(N)]
 colors = [[[0.0] * 3 for i in range(N)] for j in range(N)]
 
@@ -25,54 +23,43 @@ def create_linspace(start, stop, num):
 def calculate_egg_data():
     global vertices, colors, N
 
-    # Wyznaczenie N-elementowej tablicy wartości dla parametrów u i v
+    #N tab dla u i v
     u_coords = create_linspace(0.0, 1.0, N)
     v_coords = create_linspace(0.0, 1.0, N)
 
-    # Obliczenie współrzędnych i wylosowanie kolorów
+    # dla każdej pary u i v obliczyć i zapisać w tablicy wartości x, y i z ++ kolory
     for i in range(N):
         for j in range(N):
             u = u_coords[i]
             v = v_coords[j]
 
-            # Wzory na x, y, z zgodnie z instrukcją
-            P = (-90 * u**5 + 225 * u**4 - 270 * u**3 + 180 * u**2 - 45 * u)
-            
-            x = P * math.cos(math.pi * v)
+            #formuly z PDF
+            x = (-90 * u**5 + 225 * u**4 - 270 * u**3 + 180 * u**2 - 45 * u) * math.cos(math.pi * v)
             y = 160 * u**4 - 320 * u**3 + 160 * u**2 - 5
-            z = P * math.sin(math.pi * v)
+            z = (-90 * u**5 + 225 * u**4 - 270 * u**3 + 180 * u**2 - 45 * u) * math.sin(math.pi * v)
 
             vertices[i][j] = [x, y, z]
 
-            # Losowanie koloru dla wierzchołka (raz, aby uniknąć migotania)
-            # R, G, B w zakresie [0.0, 1.0]
             colors[i][j] = [random.random(), random.random(), random.random()]
 
 def draw_egg_triangles():
-    # Zadanie na 4.0: Rysowanie modelu przy pomocy trójkątów
     glBegin(GL_TRIANGLES)
     
     # Iterujemy do N-1, ponieważ tworzymy trójkąty między i a i+1
     for i in range(N - 1):
         for j in range(N - 1):
-            # Pierwszy trójkąt: (i, j) -> (i+1, j) -> (i, j+1)
+            # pierwszy trojkat  ij do i+1,j do i,j+1 
             glColor3fv(colors[i+1][j])
+
             glVertex3fv(vertices[i][j])
-            
-            # glColor3fv(colors[i+1][j])
             glVertex3fv(vertices[i+1][j])
-            
-            # glColor3fv(colors[i][j+1])
             glVertex3fv(vertices[i][j+1])
 
-            # Drugi trójkąt (dopełniający): (i, j+1) -> (i+1, j) -> (i+1, j+1)
+            # drugi trojkat i,j+1 do i+1,j do i+1,j+1
             glColor3fv(colors[i][j+1])
+
             glVertex3fv(vertices[i][j+1])
-            
-            # glColor3fv(colors[i+1][j])
             glVertex3fv(vertices[i+1][j])
-            
-            # glColor3fv(colors[i+1][j+1])
             glVertex3fv(vertices[i+1][j+1])
                 
     glEnd()
@@ -80,19 +67,17 @@ def draw_egg_triangles():
 def startup():
     update_viewport(None, 400, 400)
     glClearColor(0.0, 0.0, 0.0, 1.0)
-    glEnable(GL_DEPTH_TEST) # Włączenie bufora głębi
+    glEnable(GL_DEPTH_TEST)
 
 def shutdown():
     pass
 
 def spin(angle):
-    # Funkcja obracająca obiekt
     glRotatef(angle, 1.0, 0.0, 0.0)
     glRotatef(angle, 0.0, 1.0, 0.0)
     glRotatef(angle, 0.0, 0.0, 1.0)
 
 def axes():
-    # Rysowanie osi współrzędnych
     glBegin(GL_LINES)
 
     glColor3f(1.0, 0.0, 0.0)
@@ -112,13 +97,11 @@ def axes():
 def render(time):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-    
-    # Animacja obrotu
+
     spin(time * 180 / math.pi)
 
     axes()
 
-    # Wywołanie funkcji rysującej trójkąty
     draw_egg_triangles()
 
     glFlush()
@@ -146,7 +129,6 @@ def main():
     if not glfwInit():
         sys.exit(-1)
 
-    # Obliczenie danych (współrzędne + kolory) przed utworzeniem okna lub tuż po
     calculate_egg_data()
 
     window = glfwCreateWindow(400, 400, __file__, None, None)

@@ -6,22 +6,20 @@ from glfw.GLFW import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-# --- Глобальные переменные ---
-
-# Режим работы: 0 = Вращение Камеры, 1 = Вращение Объекта
+#0-obracanie objektu, 1 - obracanie kamery
 movement_mode = 0 
 
-# Параметры КАМЕРЫ (Camera)
+#parametry camery
 c_R = 10.0
 c_theta = 0.0
 c_phi = 0.0
 
-# Параметры ОБЪЕКТА (Object)
+#parametru objektu
 o_theta = 0.0
 o_phi = 0.0
 o_scale = 1.0
 
-# Общие переменные мыши
+#zmienne myszy
 pix2angle = 1.0
 left_mouse_button_pressed = 0
 right_mouse_button_pressed = 0
@@ -40,11 +38,8 @@ def shutdown():
 
 def axes():
     glBegin(GL_LINES)
-    # X - Red
     glColor3f(1.0, 0.0, 0.0); glVertex3f(-5.0, 0.0, 0.0); glVertex3f(5.0, 0.0, 0.0)
-    # Y - Green
     glColor3f(0.0, 1.0, 0.0); glVertex3f(0.0, -5.0, 0.0); glVertex3f(0.0, 5.0, 0.0)
-    # Z - Blue
     glColor3f(0.0, 0.0, 1.0); glVertex3f(0.0, 0.0, -5.0); glVertex3f(0.0, 0.0, 5.0)
     glEnd()
 
@@ -53,13 +48,12 @@ def example_object():
     quadric = gluNewQuadric()
     gluQuadricDrawStyle(quadric, GLU_LINE)
     
-    # Применяем трансформации ОБЪЕКТА (вращение и масштаб)
-    # Это выполняется всегда, но значения меняются только если выбран режим объекта
+    #obracanie oraz scale objekta w trybie objekta
     glRotatef(o_theta, 0.0, 1.0, 0.0)
     glRotatef(o_phi, 1.0, 0.0, 0.0)
     glScalef(o_scale, o_scale, o_scale)
 
-    # Рисование самого объекта (яйцелет из примера)
+
     glRotatef(90, 1.0, 0.0, 0.0)
     glRotatef(-90, 0.0, 1.0, 0.0)
     gluSphere(quadric, 1.5, 10, 10)
@@ -92,41 +86,42 @@ def render(time):
 
     # --- ЛОГИКА ОБНОВЛЕНИЯ ДАННЫХ ---
     if left_mouse_button_pressed:
-        if movement_mode == 0: # Режим КАМЕРЫ
+        #kamera
+        if movement_mode == 0:
             c_theta += delta_x * pix2angle
             c_phi += delta_y * pix2angle
-        else: # Режим ОБЪЕКТА
+        #objekt
+        else:
             o_theta += delta_x * pix2angle
             o_phi += delta_y * pix2angle
     
     if right_mouse_button_pressed:
-        if movement_mode == 0: # Зум камеры
+        #kamera zoom
+        if movement_mode == 0:
             c_R += delta_x * 0.1
-        else: # Масштаб объекта
+        #objekt scale
+        else:
             o_scale += delta_x * 0.01
 
-    # --- ОГРАНИЧЕНИЯ КАМЕРЫ (Task 4.5) ---
+    #ograniczenia kamery
     c_theta = c_theta % 360.0
     if c_phi > 89.0: c_phi = 89.0
     if c_phi < -89.0: c_phi = -89.0
     if c_R < 2.0: c_R = 2.0
     if c_R > 50.0: c_R = 50.0
 
-    # --- РАСЧЕТ ПОЗИЦИИ КАМЕРЫ ---
-    # Используем переменные c_...
+    #współrzędne kamery na sferze w radianach(stopnie*pi/180)
     x_eye = c_R * math.cos(c_theta * math.pi / 180) * math.cos(c_phi * math.pi / 180)
     y_eye = c_R * math.sin(c_phi * math.pi / 180)
     z_eye = c_R * math.sin(c_theta * math.pi / 180) * math.cos(c_phi * math.pi / 180)
 
-    # Установка камеры
+    #ustawienie kamery 
     gluLookAt(x_eye, y_eye, z_eye,
-              0.0, 0.0, 0.0,
-              0.0, 1.0, 0.0)
+              0.0, 0.0, 0.0,   #punkt patrzenia (do srodka)
+              0.0, 1.0, 0.0)   #wektor gory
 
-    # Рисование осей (они неподвижны в мировом пространстве)
     axes()
     
-    # Рисование объекта (внутри функции применяются o_... трансформации)
     example_object()
     
     glFlush()
@@ -150,9 +145,9 @@ def keyboard_key_callback(window, key, scancode, action, mods):
     if key == GLFW_KEY_ESCAPE and action == GLFW_PRESS:
         glfwSetWindowShouldClose(window, GLFW_TRUE)
         
-    # ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ ПО КЛАВИШЕ TAB 
+    #obsluga przycisku TAb 
     if key == GLFW_KEY_TAB and action == GLFW_PRESS:
-        movement_mode = 1 - movement_mode # Переключение 0 <-> 1
+        movement_mode = 1 - movement_mode
         mode_name = "OBJECT" if movement_mode == 1 else "CAMERA"
         print(f"Mode switched to: {mode_name}")
 
@@ -181,7 +176,7 @@ def mouse_button_callback(window, button, action, mods):
 def main():
     if not glfwInit():
         sys.exit(-1)
-    window = glfwCreateWindow(400, 400, "Lab 4.5 - Press TAB to switch modes", None, None)
+    window = glfwCreateWindow(400, 400, "Nacisnij TAB do zmiany trybu pracy", None, None)
     if not window:
         glfwTerminate()
         sys.exit(-1)
@@ -195,11 +190,11 @@ def main():
     
     startup()
     
-    print("Program started.")
-    print("Controls:")
-    print("  LMB drag: Rotate (Camera or Object)")
-    print("  RMB drag: Zoom (Camera) or Scale (Object)")
-    print("  TAB: Switch mode")
+    print("Program uruchomiony")
+    print("Sterowanie:")
+    print("  LPM (przeciąganie): Obrót (Kamera lub Obiekt)")
+    print("  PPM (przeciąganie): Przybliżanie (Kamera) lub Skalowanie (Obiekt)")
+    print("  TAB: Zmiana trybu (Kamera lub Obiekt)")
     
     while not glfwWindowShouldClose(window):
         render(glfwGetTime())

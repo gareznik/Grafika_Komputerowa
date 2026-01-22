@@ -8,11 +8,11 @@ viewer = [0.0, 0.0, 10.0]
 
 theta = 0.0
 phi = 0.0
-scale = 1.0     # Zmienna skali 
+scale = 1.0
 pix2angle = 1.0
 
 left_mouse_button_pressed = 0
-right_mouse_button_pressed = 0 # Stan prawego przycisku [cite: 725]
+right_mouse_button_pressed = 0
 mouse_x_pos_old = 0
 delta_x = 0
 mouse_y_pos_old = 0
@@ -73,14 +73,12 @@ def render(time):
         theta += delta_x * pix2angle
         phi += delta_y * pix2angle
     
-    # Skalowanie prawym przyciskiem myszy [cite: 730]
     if right_mouse_button_pressed:
         scale += delta_x * 0.01
 
-    # Obroty i skalowanie
     glRotatef(theta, 0.0, 1.0, 0.0)
     glRotatef(phi, 1.0, 0.0, 0.0)
-    glScalef(scale, scale, scale) # Przeskalowanie [cite: 731]
+    glScalef(scale, scale, scale)
 
     axes()
     example_object()
@@ -120,7 +118,7 @@ def mouse_button_callback(window, button, action, mods):
     elif button == GLFW_MOUSE_BUTTON_LEFT and action == GLFW_RELEASE:
         left_mouse_button_pressed = 0
 
-    # Obsługa prawego przycisku [cite: 725]
+    # prawy przycisk
     if button == GLFW_MOUSE_BUTTON_RIGHT and action == GLFW_PRESS:
         right_mouse_button_pressed = 1
     elif button == GLFW_MOUSE_BUTTON_RIGHT and action == GLFW_RELEASE:

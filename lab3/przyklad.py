@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import math
 import sys
 
 from glfw.GLFW import *
@@ -7,67 +6,16 @@ from glfw.GLFW import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-N = 30
-vertices = [[[0.0] * 3 for i in range(N)] for j in range(N)]
-
-def create_linspace(start, stop, num):
-    if num == 1:
-        return [start]
-    
-    step = (stop - start) / (num - 1)
-    return [start + step * i for i in range(num)]
-
-def calculate_egg_vertices():
-    global vertices, N
-
-    #N tab dla u i v
-    u_coords = create_linspace(0.0, 1.0, N)
-    v_coords = create_linspace(0.0, 1.0, N)
-
-    # dla każdej pary u i v obliczyć i zapisać w tablicy wartości x, y i z
-    for i in range(N):
-        for j in range(N):
-            u = u_coords[i]
-            v = v_coords[j]
-            
-            #formuly z PDF
-            x = (-90 * u**5 + 225 * u**4 - 270 * u**3 + 180 * u**2 - 45 * u) * math.cos(math.pi * v)
-            y = 160 * u**4 - 320 * u**3 + 160 * u**2 - 5
-            z = (-90 * u**5 + 225 * u**4 - 270 * u**3 + 180 * u**2 - 45 * u) * math.sin(math.pi * v)
-
-            vertices[i][j] = [x, y, z]
-
-def draw_egg_lines():
-    glBegin(GL_LINES)
-    
-    glColor3f(1.0, 1.0, 0.0)
-
-    for i in range(N):
-        for j in range(N):
-            #element (i, j) połączyć z elementami (i + 1, j) oraz (i, j + 1)
-            #sprawdzamy zakres i(j) < N-1
-            if i < N - 1:
-                glVertex3fv(vertices[i][j])
-                glVertex3fv(vertices[i+1][j])
-            
-            if j < N - 1:
-                glVertex3fv(vertices[i][j])
-                glVertex3fv(vertices[i][j+1])
-                
-    glEnd()
 
 def startup():
     update_viewport(None, 400, 400)
     glClearColor(0.0, 0.0, 0.0, 1.0)
     glEnable(GL_DEPTH_TEST)
 
+
 def shutdown():
     pass
 
-def spin(angle):
-    glRotatef(angle, 1.0, 0.0, 0.0)
-    glRotatef(angle, 0.0, 1.0, 0.0)
-    glRotatef(angle, 0.0, 0.0, 1.0)
 
 def axes():
     glBegin(GL_LINES)
@@ -86,17 +34,15 @@ def axes():
 
     glEnd()
 
+
 def render(time):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-    
-    spin(time * 180 / math.pi)
 
     axes()
 
-    draw_egg_lines()
-
     glFlush()
+
 
 def update_viewport(window, width, height):
     if width == 0:
@@ -117,11 +63,10 @@ def update_viewport(window, width, height):
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
 
+
 def main():
     if not glfwInit():
         sys.exit(-1)
-
-    calculate_egg_vertices()
 
     window = glfwCreateWindow(400, 400, __file__, None, None)
     if not window:
@@ -140,6 +85,7 @@ def main():
     shutdown()
 
     glfwTerminate()
+
 
 if __name__ == '__main__':
     main()

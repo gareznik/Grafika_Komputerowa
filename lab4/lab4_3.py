@@ -74,22 +74,24 @@ def render(time):
     
     # Zmiana promienia (przybliżanie) prawym przyciskiem 
     if right_mouse_button_pressed:
+        # scale += delta_x * 0.01
         R += delta_x * 0.1
 
-    # Obliczenie współrzędnych oka na sferze 
-    # Konwersja na radiany: stopnie * pi / 180 
+
+    # glRotatef(theta, 0.0, 1.0, 0.0)
+    # glRotatef(phi, 1.0, 0.0, 0.0)
+    # glScalef(scale, scale, scale)
+
+
+    #współrzędne oka na sferze w radianach(stopnie*pi/180)
     x_eye = R * math.cos(theta * math.pi / 180) * math.cos(phi * math.pi / 180)
     y_eye = R * math.sin(phi * math.pi / 180)
     z_eye = R * math.sin(theta * math.pi / 180) * math.cos(phi * math.pi / 180)
 
-    # Ustawienie kamery 
+    #ustawienie kamery 
     gluLookAt(x_eye, y_eye, z_eye,
-              0.0, 0.0, 0.0,   # Punkt patrzenia (środek)
-              0.0, 1.0, 0.0)   # Wektor góry
-
-    # Zakomentowane transformacje obiektu 
-    # glRotatef(...)
-    # glScalef(...)
+              0.0, 0.0, 0.0,   #punkt patrzenia (do srodka)
+              0.0, 1.0, 0.0)   #wektor gory
 
     axes()
     example_object()

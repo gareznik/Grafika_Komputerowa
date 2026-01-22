@@ -6,16 +6,15 @@ from OpenGL.GLU import *
 
 viewer = [0.0, 0.0, 10.0]
 
-# Zmienne kątowe
 theta = 0.0
-phi = 0.0       # Nowa zmienna dla osi X
+phi = 0.0
 pix2angle = 1.0
 
 left_mouse_button_pressed = 0
 mouse_x_pos_old = 0
 delta_x = 0
 
-# Nowe zmienne dla ruchu w pionie
+#dla ruchu Y
 mouse_y_pos_old = 0
 delta_y = 0
 
@@ -72,9 +71,9 @@ def render(time):
 
     if left_mouse_button_pressed:
         theta += delta_x * pix2angle
-        phi += delta_y * pix2angle # Aktualizacja kąta phi
+        phi += delta_y * pix2angle
 
-    # Obrót wokół osi X (góra-dół)
+    # obrot gora-dol w osi x
     glRotatef(theta, 0.0, 1.0, 0.0)
     glRotatef(phi, 1.0, 0.0, 0.0)
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!C:/Users/koles/AppData/Local/Programs/Python/Python314/python.exe
 import sys
 import math
 
@@ -17,7 +17,7 @@ c_phi = 0.0
 #parametru objektu
 o_theta = 0.0
 o_phi = 0.0
-o_scale = 1.0
+o_scale = 10.0
 
 #zmienne myszy
 pix2angle = 1.0
@@ -190,11 +190,11 @@ def main():
     
     startup()
     
-    print("Program uruchomiony")
+    print("Program uruchomiony.")
     print("Sterowanie:")
-    print("  LPM (przeciąganie): Obrót (Kamera lub Obiekt)")
-    print("  PPM (przeciąganie): Przybliżanie (Kamera) lub Skalowanie (Obiekt)")
-    print("  TAB: Zmiana trybu (Kamera lub Obiekt)")
+    print("  LPM (przeciaganie): Obrot (Kamera lub Obiekt)")
+    print("  PPM (przeciaganie): Przyblizanie (Kamera) lub Skalowanie (Obiekt)")
+    print("  TAB: Zmiana trybu")
     
     while not glfwWindowShouldClose(window):
         render(glfwGetTime())

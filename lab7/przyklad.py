@@ -1,19 +1,24 @@
+#!/usr/bin/env python3
+
 import ctypes
 import sys
 
 from glfw.GLFW import *
 
 import glm
+
 import numpy
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
+
 
 rendering_program = None
 vertex_array_object = None
 vertex_buffer = None
 
 P_matrix = None
+
 
 def compile_shaders():
     vertex_shader_source = """
@@ -25,12 +30,8 @@ def compile_shaders():
         uniform mat4 V_matrix;
         uniform mat4 P_matrix;
 
-        out vec4 vertex_color; 
-
         void main(void) {
             gl_Position = P_matrix * V_matrix * M_matrix * position;
-            
-            vertex_color = vec4(0.2, 0.9, 0.1, 1.0); 
         }
     """
 
@@ -39,10 +40,8 @@ def compile_shaders():
 
         out vec4 color;
 
-        in vec4 vertex_color;
-
         void main(void) {
-            color = vertex_color;
+            color = vec4(0.7, 0.7, 0.7, 1.0);
         }
     """
 
@@ -52,7 +51,7 @@ def compile_shaders():
     success = glGetShaderiv(vertex_shader, GL_COMPILE_STATUS)
 
     if not success:
-        print('Shader compilation error (Vertex):')
+        print('Shader compilation error:')
         print(glGetShaderInfoLog(vertex_shader).decode('UTF-8'))
 
     fragment_shader = glCreateShader(GL_FRAGMENT_SHADER)
@@ -61,7 +60,7 @@ def compile_shaders():
     success = glGetShaderiv(fragment_shader, GL_COMPILE_STATUS)
 
     if not success:
-        print('Shader compilation error (Fragment):')
+        print('Shader compilation error:')
         print(glGetShaderInfoLog(fragment_shader).decode('UTF-8'))
 
     program = glCreateProgram()
@@ -99,26 +98,59 @@ def startup():
     glBindVertexArray(vertex_array_object)
 
     vertex_positions = numpy.array([
-        -0.25, +0.25, -0.25, -0.25, -0.25, -0.25, +0.25, -0.25, -0.25,
-        +0.25, -0.25, -0.25, +0.25, +0.25, -0.25, -0.25, +0.25, -0.25,
-        +0.25, -0.25, -0.25, +0.25, -0.25, +0.25, +0.25, +0.25, -0.25,
-        +0.25, -0.25, +0.25, +0.25, +0.25, +0.25, +0.25, +0.25, -0.25,
-        +0.25, -0.25, +0.25, -0.25, -0.25, +0.25, +0.25, +0.25, +0.25,
-        -0.25, -0.25, +0.25, -0.25, +0.25, +0.25, +0.25, +0.25, +0.25,
-        -0.25, -0.25, +0.25, -0.25, -0.25, -0.25, -0.25, +0.25, +0.25,
-        -0.25, -0.25, -0.25, -0.25, +0.25, -0.25, -0.25, +0.25, +0.25,
-        -0.25, -0.25, +0.25, +0.25, -0.25, +0.25, +0.25, -0.25, -0.25,
-        +0.25, -0.25, -0.25, -0.25, -0.25, -0.25, -0.25, -0.25, +0.25,
-        -0.25, +0.25, -0.25, +0.25, +0.25, -0.25, +0.25, +0.25, +0.25,
-        +0.25, +0.25, +0.25, -0.25, +0.25, +0.25, -0.25, +0.25, -0.25,
+        -0.25, +0.25, -0.25,
+        -0.25, -0.25, -0.25,
+        +0.25, -0.25, -0.25,
+
+        +0.25, -0.25, -0.25,
+        +0.25, +0.25, -0.25,
+        -0.25, +0.25, -0.25,
+
+        +0.25, -0.25, -0.25,
+        +0.25, -0.25, +0.25,
+        +0.25, +0.25, -0.25,
+
+        +0.25, -0.25, +0.25,
+        +0.25, +0.25, +0.25,
+        +0.25, +0.25, -0.25,
+
+        +0.25, -0.25, +0.25,
+        -0.25, -0.25, +0.25,
+        +0.25, +0.25, +0.25,
+
+        -0.25, -0.25, +0.25,
+        -0.25, +0.25, +0.25,
+        +0.25, +0.25, +0.25,
+
+        -0.25, -0.25, +0.25,
+        -0.25, -0.25, -0.25,
+        -0.25, +0.25, +0.25,
+
+        -0.25, -0.25, -0.25,
+        -0.25, +0.25, -0.25,
+        -0.25, +0.25, +0.25,
+
+        -0.25, -0.25, +0.25,
+        +0.25, -0.25, +0.25,
+        +0.25, -0.25, -0.25,
+
+        +0.25, -0.25, -0.25,
+        -0.25, -0.25, -0.25,
+        -0.25, -0.25, +0.25,
+
+        -0.25, +0.25, -0.25,
+        +0.25, +0.25, -0.25,
+        +0.25, +0.25, +0.25,
+
+        +0.25, +0.25, +0.25,
+        -0.25, +0.25, +0.25,
+        -0.25, +0.25, -0.25,
     ], dtype='float32')
 
-    # Генерация VBO (Vertex Buffer Object)
     vertex_buffer = glGenBuffers(1)
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer)
     glBufferData(GL_ARRAY_BUFFER, vertex_positions, GL_STATIC_DRAW)
 
-    # Описание структуры данных в буфере (атрибут 0 = позиция)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, ctypes.c_void_p(0))
     glEnableVertexAttribArray(0)
 
@@ -142,7 +174,7 @@ def render(time):
     V_matrix = glm.lookAt(
         glm.vec3(0.0, 0.0, 1.0),
         glm.vec3(0.0, 0.0, 0.0),
-        glm.vec3(0.0, 1.0, 0.0) 
+        glm.vec3(0.0, 1.0, 0.0)
     )
 
     glUseProgram(rendering_program)

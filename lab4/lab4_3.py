@@ -83,7 +83,7 @@ def render(time):
     # glScalef(scale, scale, scale)
 
 
-    #współrzędne oka na sferze w radianach(stopnie*pi/180)
+    #współrzędne kamery na sferze w radianach(stopnie*pi/180)
     x_eye = R * math.cos(theta * math.pi / 180) * math.cos(phi * math.pi / 180)
     y_eye = R * math.sin(phi * math.pi / 180)
     z_eye = R * math.sin(theta * math.pi / 180) * math.cos(phi * math.pi / 180)

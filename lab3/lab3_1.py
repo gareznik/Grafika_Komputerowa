@@ -31,12 +31,11 @@ def calculate_egg_vertices():
             u = u_coords[i]
             v = v_coords[j]
 
-            #formuly z            
+            #formuly z PDF           
             x = (-90 * u**5 + 225 * u**4 - 270 * u**3 + 180 * u**2 - 45 * u) * math.cos(math.pi * v)
             y = 160 * u**4 - 320 * u**3 + 160 * u**2 - 5
             z = (-90 * u**5 + 225 * u**4 - 270 * u**3 + 180 * u**2 - 45 * u) * math.sin(math.pi * v)
 
-            # Сохраняем [x, y, z] в 3D-список
             vertices[i][j] = [x, y, z]
 
 def draw_egg_points():
@@ -84,7 +83,7 @@ def axes():
 def render(time):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
-    spin(time * 180 / 3.1415)
+    # spin(time * 180 / 3.1415)
 
     axes()
 
